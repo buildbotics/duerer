@@ -115,8 +115,14 @@ void Transaction::convertImage() {
 
 
 bool Transaction::processRequest() {
-  // Make sure the file is not locked
+  // Sanity check path
   string base = getBase();
+  if (base.find("..") != string::npos) {
+    reply(HTTP_UNAUTHORIZED);
+    return true;
+  }
+
+  // Make sure the file is not locked
   if (app.wait(base, this)) return true;
 
   // Get type
