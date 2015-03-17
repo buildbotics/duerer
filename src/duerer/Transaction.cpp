@@ -141,7 +141,7 @@ bool Transaction::processRequest() {
   string orig = base + "/orig";
   if (size == "orig" || !SystemUtilities::exists(orig)) {
     string url = "http://" + app.getAWSBucket() + ".s3.amazonaws.com" +
-      getURI().getPath();
+      URI::encode(getURI().getPath());
 
     pending = app.getEventClient()
       .callMember(url, HTTP_GET, this, &Transaction::storeImage);
