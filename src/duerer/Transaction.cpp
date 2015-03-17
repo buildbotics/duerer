@@ -154,6 +154,11 @@ bool Transaction::processRequest() {
 
 
 bool Transaction::storeImage(Request &req) {
+  if (req.getResponseCode() != HTTP_OK) {
+    reply(req.getResponseCode());
+    return true;
+  }
+
   Event::Buffer buf = req.getInputBuffer();
 
   // Ensure the cache directory exists
