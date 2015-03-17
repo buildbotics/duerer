@@ -33,35 +33,38 @@
 #define DUERER_TRANSACTION_H
 
 #include <cbang/event/Request.h>
-#include <cbang/event/RequestMethod.h>
 #include <cbang/event/PendingRequest.h>
-
-
-namespace cb {
-  namespace JSON {
-    class Sync;
-    class Writer;
-    class Value;
-  }
-}
 
 
 namespace duerer {
   class App;
-  class User;
-  class AWS4Post;
 
   class Transaction : public cb::Event::Request {
     App &app;
+
+    std::string size;
+    cb::SmartPointer<cb::Event::PendingRequest> pending;
+    bool locked;
 
   public:
     Transaction(App &app, evhttp_request *req);
     ~Transaction();
 
-    cb::SmartPointer<cb::JSON::Dict> parseArgsPtr();
+    std::string getBase() const;
+    std::string getPath() const;
+
+    void lock();
+    void unlock();
+
+    void sendFile(const std::string &path);
+    void sendFile();
+    void convertImage();
 
     // Event::WebServer request callbacks
     bool processRequest();
+
+    // Client callback
+    bool storeImage(Request &req);
   };
 }
 

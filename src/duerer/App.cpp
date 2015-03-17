@@ -30,18 +30,18 @@
 \******************************************************************************/
 
 #include "App.h"
+#include "Transaction.h"
 
 #include <cbang/util/DefaultCatch.h>
 
 #include <cbang/os/SystemUtilities.h>
 
-#include <cbang/security/SSLContext.h>
 #include <cbang/time/Time.h>
 #include <cbang/log/Logger.h>
 #include <cbang/event/Event.h>
 
-#include <stdlib.h>
-#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 using namespace duerer;
 using namespace cb;
@@ -49,14 +49,12 @@ using namespace std;
 
 
 App::App() :
-  cb::Application("Duerer"), dns(base), client(base, dns, new SSLContext),
-  server(*this), awsRegion("us-east-1"),
-  awsUploadExpires(Time::SEC_PER_HOUR * 2) {
+  cb::Application("Duerer"), dns(base), client(base, dns),
+  server(*this), cacheDir("cache") {
 
   options.pushCategory("Duerer Server");
-  options.add("outbound-ip", "IP address for outbound connections.  Defaults "
-              "to first http-address.");
-  options.add("document-root", "Serve files from this directory.");
+  options.addTarget("cache", cacheDir,
+                    "Cache and serve files from this directory.");
   options.popCategory();
 
   options.pushCategory("Debugging");
@@ -65,17 +63,43 @@ App::App() :
   options.popCategory();
 
   options.pushCategory("Amazon Web Services");
-  options.addTarget("aws-access-key-id", awsID, "AWS access key ID");
-  options.addTarget("aws-secret-access-key", awsSecret,
-                    "AWS secret access key")->setObscured();;
   options.addTarget("aws-bucket", awsBucket, "AWS bucket name");
-  options.addTarget("aws-region", awsRegion, "AWS region code");
-  options.addTarget("aws-upload-expires", awsUploadExpires,
-                    "Lifetime in seconds of an AWS upload token");
   options.popCategory();
 
   // Enable libevent logging
   Event::Event::enableLogging(3);
+}
+
+
+void App::registerSubprocess(uint64_t pid, Transaction *tran) {
+  subprocesses[pid] = tran;
+}
+
+
+bool App::wait(const string &path, Transaction *tran) {
+  waiters_t::iterator it = waiters.find(path);
+  if (it == waiters.end()) return false;
+
+  it->second.push_back(tran);
+
+  return true;
+}
+
+
+void App::lock(const string &path) {
+  waiters.insert(waiters_t::value_type(path, vector<Transaction *>()));
+}
+
+
+void App::unlock(const string &path) {
+  waiters_t::iterator it = waiters.find(path);
+  if (it == waiters.end()) return;
+
+  vector<Transaction *> trans = it->second;
+  waiters.erase(it);
+
+  for (unsigned i = 0; i < trans.size(); i++)
+    trans[i]->processRequest();
 }
 
 
@@ -88,14 +112,13 @@ int App::init(int argc, char *argv[]) {
 
   server.init();
 
-  // Initialized outbound IP
-  if (options["outbound-ip"].hasValue())
-    outboundIP = IPAddress(options["outbound-ip"]);
-  outboundIP.setPort(0);
-
   // Handle exit signal
-  base.newSignal(SIGINT, this, &App::signalEvent).add();
-  base.newSignal(SIGTERM, this, &App::signalEvent).add();
+  base.newSignal(SIGINT, this, &App::interruptSignal).add();
+  base.newSignal(SIGTERM, this, &App::interruptSignal).add();
+  base.newSignal(SIGCHLD, this, &App::childSignal).add();
+
+  // Make sure cache dir exists
+  SystemUtilities::ensureDirectory(getCacheDir());
 
   return 0;
 }
@@ -109,6 +132,21 @@ void App::run() {
 }
 
 
-void App::signalEvent(Event::Event &e, int signal, unsigned flags) {
+void App::interruptSignal(Event::Event &e, int signal, unsigned flags) {
   base.loopExit();
+}
+
+
+void App::childSignal(Event::Event &e, int signal, unsigned flags) {
+  pid_t pid;
+
+  while (0 < (pid = waitpid(-1, 0, WNOHANG))) {
+    subprocesses_t::iterator it = subprocesses.find(pid);
+    if (it == subprocesses.end()) continue;
+    it->second->sendFile();
+    subprocesses.erase(it);
+  }
+
+  e.renew(signal);
+  e.add();
 }

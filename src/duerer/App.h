@@ -42,6 +42,9 @@
 #include <cbang/event/DNSBase.h>
 #include <cbang/event/Client.h>
 
+#include <map>
+
+
 namespace cb {
   namespace Event {class Event;}
   namespace MariaDB {class EventDB;}
@@ -49,19 +52,22 @@ namespace cb {
 
 
 namespace duerer {
+  class Transaction;
+
   class App : public cb::Application {
     cb::Event::Base base;
     cb::Event::DNSBase dns;
     cb::Event::Client client;
 
     Server server;
-    cb::IPAddress outboundIP;
-
-    std::string awsID;
-    std::string awsSecret;
+    std::string cacheDir;
     std::string awsBucket;
-    std::string awsRegion;
-    uint32_t awsUploadExpires;
+
+    typedef std::map<uint64_t, Transaction *> subprocesses_t;
+    subprocesses_t subprocesses;
+
+    typedef std::map<std::string, std::vector<Transaction *> > waiters_t;
+    waiters_t waiters;
 
   public:
     App();
@@ -70,19 +76,21 @@ namespace duerer {
     cb::Event::DNSBase &getEventDNS() {return dns;}
     cb::Event::Client &getEventClient() {return client;}
 
-    const cb::IPAddress &getOutboundIP() const {return outboundIP;}
-
-    const std::string &getAWSID() const {return awsID;}
-    const std::string &getAWSSecret() const {return awsSecret;}
+    const std::string &getCacheDir() const {return cacheDir;}
     const std::string &getAWSBucket() const {return awsBucket;}
-    const std::string &getAWSRegion() const {return awsRegion;}
-    uint32_t getAWSUploadExpires() const {return awsUploadExpires;}
+
+    void registerSubprocess(uint64_t pid, Transaction *tran);
+
+    bool wait(const std::string &path, Transaction *tran);
+    void lock(const std::string &path);
+    void unlock(const std::string &path);
 
     // From cb::Application
     int init(int argc, char *argv[]);
     void run();
 
-    void signalEvent(cb::Event::Event &e, int signal, unsigned flags);
+    void interruptSignal(cb::Event::Event &e, int signal, unsigned flags);
+    void childSignal(cb::Event::Event &e, int signal, unsigned flags);
   };
 }
 

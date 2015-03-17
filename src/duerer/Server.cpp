@@ -33,24 +33,13 @@
 #include "App.h"
 #include "Transaction.h"
 
-#include <cbang/security/SSLContext.h>
-
-#include <cbang/event/Request.h>
-#include <cbang/event/PendingRequest.h>
-#include <cbang/event/Buffer.h>
-
-#include <cbang/config/Options.h>
-#include <cbang/log/Logger.h>
-
-#include <stdlib.h>
-
 using namespace cb;
 using namespace std;
 using namespace duerer;
 
 
 Server::Server(App &app) :
-  Event::WebServer(app.getOptions(), app.getEventBase(), new SSLContext),
+  Event::WebServer(app.getOptions(), app.getEventBase()),
   app(app) {
 }
 
