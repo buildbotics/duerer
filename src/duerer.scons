@@ -1,0 +1,29 @@
+import glob
+
+Import('*')
+
+env.Append(CPPPATH = ['#/src'])
+
+subdirs = ['']
+
+# Source
+src = []
+for dir in subdirs:
+    src += Glob('duerer/' + dir + '/*.cpp')
+
+
+# Build lib
+lib = env.Library(name, src)
+
+
+# Build Info
+info = env.BuildInfo('build_info.cpp', [])
+AlwaysBuild(info)
+
+# Main program
+prog = env.Program('#/' + name, [name + '.cpp', info, lib]);
+
+
+# Return
+pair = (prog, lib)
+Return('pair')

@@ -1,28 +1,17 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Logs
+*.log
 
-# Precompiled Headers
-*.gch
-*.pch
+# Backup files
+*~
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# Scons
+.sconf_temp
+.sconsign.dblite
 
-# Fortran module files
-*.mod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Misc
+api
+build
+http
+certificate.pem
+private.pem
+config.xml
