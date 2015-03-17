@@ -63,7 +63,7 @@ if 'package' in COMMAND_LINE_TARGETS:
         url = 'http://buildbotics.com/',
         license = 'copyright',
         bug_url = 'https://github.com/buildbotics/' + name + '/issues',
-        summary = short_description,
+        summary = 'Image caching server',
         description = description,
         prefix = '/usr',
 

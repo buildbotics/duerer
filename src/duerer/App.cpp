@@ -50,7 +50,7 @@ using namespace std;
 
 App::App() :
   cb::Application("Duerer"), dns(base), client(base, dns),
-  server(*this), cacheDir("cache") {
+  server(*this), cacheDir("cache"), awsBucket("buildbotics") {
 
   options.pushCategory("Duerer Server");
   options.addTarget("cache", cacheDir,

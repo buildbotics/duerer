@@ -1,0 +1,34 @@
+#!/bin/bash -e
+
+NAME=duerer
+ETC=/etc/$NAME
+RUN=/var/run/$NAME
+LOG=/var/log/$NAME
+
+case "$1" in
+    reconfigure|configure)
+        # Setup permissions
+        chown root:$NAME $ETC
+        chown $NAME:$NAME $RUN $LOG
+        chmod 775 $ETC $RUN $LOG
+
+        if [ -x insserv ]; then
+            # Install the init.d script
+            insserv -d $NAME
+
+            # Start the service
+            if [ -e $ETC/config.xml ]; then
+                service $NAME start || true
+            fi
+
+        else
+            # Install the init.d script
+            update-rc.d $NAME defaults 95
+
+            # Start the service
+            if [ -e $ETC/config.xml ]; then
+              invoke-rc.d $NAME start || true
+            fi
+        fi
+        ;;
+esac
