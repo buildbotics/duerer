@@ -93,21 +93,17 @@ void Transaction::sendFile() {
 void Transaction::convertImage() {
   string path = getBase();
 
-  vector<string> cmd;
+  string cmd;
 
-  cmd.push_back("/usr/bin/convert");
-  cmd.push_back(path + "/orig");
-  cmd.push_back("-auto-orient");
-  cmd.push_back("-strip");
-  cmd.push_back("-resize");
+  if (size == "large") cmd = app.getLargeCmd();
+  else if (size == "small") cmd = app.getSmallCmd();
+  else if (size == "thumb") cmd = app.getThumbCmd();
 
-  if (size == "large") cmd.push_back("700x433>");
-  else if (size == "small") cmd.push_back("300x185>");
-  else if (size == "thumb") cmd.push_back("32x32>");
-
-  cmd.push_back(path + "/" + size);
+  cmd = String::replace(cmd, "\\$src", "orig");
+  cmd = String::replace(cmd, "\\$dst", size);
 
   Subprocess proc;
+  proc.setWorkingDirectory(path);
   proc.exec(cmd);
 
   app.registerSubprocess(proc.getPID(), this);

@@ -55,6 +55,9 @@ App::App() :
   options.pushCategory("Duerer Server");
   options.addTarget("cache", cacheDir,
                     "Cache and serve files from this directory.");
+  options.addTarget("large-cmd", largeCmd, "Large image conversion command");
+  options.addTarget("small-cmd", smallCmd, "Small image conversion command");
+  options.addTarget("thumb-cmd", thumbCmd, "Thumb image conversion command");
   options.popCategory();
 
   options.pushCategory("Debugging");
