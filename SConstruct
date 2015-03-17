@@ -72,7 +72,7 @@ if 'package' in COMMAND_LINE_TARGETS:
         deb_directory = 'debian',
         deb_section = 'science',
         deb_depends = 'debconf | debconf-2.0, libc6, bzip2, zlib1g',
-        deb_pre_depends = 'adduser, ssl-cert',
+        deb_pre_depends = 'adduser',
         deb_priority = 'optional',
         )
 
