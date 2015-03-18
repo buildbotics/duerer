@@ -63,10 +63,6 @@ namespace duerer {
     std::string cacheDir;
     std::string awsBucket;
 
-    std::string largeCmd;
-    std::string smallCmd;
-    std::string thumbCmd;
-
     typedef std::map<uint64_t, Transaction *> subprocesses_t;
     subprocesses_t subprocesses;
 
@@ -83,9 +79,8 @@ namespace duerer {
     const std::string &getCacheDir() const {return cacheDir;}
     const std::string &getAWSBucket() const {return awsBucket;}
 
-    const std::string &getLargeCmd() const {return largeCmd;}
-    const std::string &getSmallCmd() const {return smallCmd;}
-    const std::string &getThumbCmd() const {return thumbCmd;}
+    bool hasCmd(const std::string &size) const;
+    const std::string &getCmd(const std::string &size) const;
 
     void registerSubprocess(uint64_t pid, Transaction *tran);
 

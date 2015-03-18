@@ -93,12 +93,7 @@ void Transaction::sendFile() {
 void Transaction::convertImage() {
   string path = getBase();
 
-  string cmd;
-
-  if (size == "large") cmd = app.getLargeCmd();
-  else if (size == "small") cmd = app.getSmallCmd();
-  else if (size == "thumb") cmd = app.getThumbCmd();
-
+  string cmd = app.getCmd(size);
   cmd = String::replace(cmd, "\\$src", "orig");
   cmd = String::replace(cmd, "\\$dst", size);
 
@@ -126,8 +121,7 @@ bool Transaction::processRequest() {
   size = String::toLower(args.getString("size", "orig"));
 
   // Validate size
-  if (size != "orig" && size != "large" && size != "small" && size != "thumb")
-    THROWS("Invalid size " << size);
+  if (size != "orig" && !app.hasCmd(size)) THROWS("Invalid size " << size);
 
   // Check if file exists
   string path = base + "/" + size;
