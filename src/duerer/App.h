@@ -36,7 +36,6 @@
 
 #include <cbang/Application.h>
 #include <cbang/net/IPAddress.h>
-#include <cbang/security/KeyPair.h>
 
 #include <cbang/event/Base.h>
 #include <cbang/event/DNSBase.h>
