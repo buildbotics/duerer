@@ -96,6 +96,7 @@ void Transaction::convertImage() {
   string cmd = app.getCmd(size);
   cmd = String::replace(cmd, "\\$src", "orig");
   cmd = String::replace(cmd, "\\$dst", size);
+  cmd = String::replace(cmd, "\\$common", app.getCommon());
 
   Subprocess proc;
   proc.setWorkingDirectory(path);

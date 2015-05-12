@@ -78,6 +78,7 @@ namespace duerer {
     const std::string &getCacheDir() const {return cacheDir;}
     const std::string &getAWSBucket() const {return awsBucket;}
 
+    const std::string &getCommon() const;
     bool hasCmd(const std::string &size) const;
     const std::string &getCmd(const std::string &size) const;
 

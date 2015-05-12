@@ -55,6 +55,7 @@ App::App() :
   options.pushCategory("Duerer Server");
   options.addTarget("cache", cacheDir,
                     "Cache and serve files from this directory.");
+  options.add("common", "Common conversion command args")->setDefault("");
   options.add("alarge-cmd", "Large avatar conversion command");
   options.add("asmall-cmd", "Small avatar conversion command");
   options.add("large-cmd", "Large image conversion command");
@@ -73,6 +74,11 @@ App::App() :
 
   // Enable libevent logging
   Event::Event::enableLogging(3);
+}
+
+
+const string &App::getCommon() const {
+  return options["common"];
 }
 
 
