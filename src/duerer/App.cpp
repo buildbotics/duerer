@@ -59,6 +59,7 @@ App::App() :
   options.add("alarge-cmd", "Large avatar conversion command");
   options.add("asmall-cmd", "Small avatar conversion command");
   options.add("large-cmd", "Large image conversion command");
+  options.add("xlarge-cmd", "XL image conversion command");
   options.add("small-cmd", "Small image conversion command");
   options.add("thumb-cmd", "Thumb image conversion command");
   options.popCategory();
