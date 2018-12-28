@@ -9,9 +9,14 @@
 .sconsign.dblite
 
 # Misc
-api
-build
-http
-certificate.pem
-private.pem
-config.xml
+/api
+/build
+/http
+/certificate.pem
+/private.pem
+/config.xml
+/duerer
+/cache
+/package.txt
+/package-description.txt
+/*.deb
