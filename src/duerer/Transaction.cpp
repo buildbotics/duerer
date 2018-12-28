@@ -150,13 +150,15 @@ bool Transaction::processRequest() {
 }
 
 
-bool Transaction::storeImage(Request &req) {
-  if (req.getResponseCode() != HTTP_OK) {
-    reply(req.getResponseCode());
-    return true;
+void Transaction::storeImage(Request *req, int err) {
+  if (!req || err) return;
+
+  if (req->getResponseCode() != HTTP_OK) {
+    reply(req->getResponseCode());
+    return;
   }
 
-  Event::Buffer buf = req.getInputBuffer();
+  Event::Buffer buf = req->getInputBuffer();
 
   // Ensure the cache directory exists
   string path = getBase();
@@ -168,6 +170,4 @@ bool Transaction::storeImage(Request &req) {
 
   if (size == "orig") sendFile(path);
   else convertImage();
-
-  return true;
 }

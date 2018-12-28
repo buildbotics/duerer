@@ -64,9 +64,8 @@ namespace duerer {
     bool processRequest();
 
     // Client callback
-    bool storeImage(Request &req);
+    void storeImage(Request *req, int err);
   };
 }
 
 #endif // DUERER_TRANSACTION_H
-
