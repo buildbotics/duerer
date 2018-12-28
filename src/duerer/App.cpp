@@ -49,7 +49,7 @@ using namespace std;
 
 
 App::App() :
-  cb::Application("Duerer"), dns(base), client(base, dns),
+  cb::Application("Duerer", App::_hasFeature), dns(base), client(base, dns),
   server(*this), cacheDir("cache"), awsBucket("buildbotics") {
 
   options.pushCategory("Duerer Server");
@@ -75,6 +75,12 @@ App::App() :
 
   // Enable libevent logging
   Event::Event::enableLogging(3);
+}
+
+
+bool App::_hasFeature(int feature) {
+  if (feature == FEATURE_SIGNAL_HANDLER) return false;
+  return Application::_hasFeature(feature);
 }
 
 

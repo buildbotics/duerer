@@ -29,8 +29,7 @@
 
 \******************************************************************************/
 
-#ifndef DUERER_APP_H
-#define DUERER_APP_H
+#pragma once
 
 #include "Server.h"
 
@@ -71,6 +70,8 @@ namespace duerer {
   public:
     App();
 
+    static bool _hasFeature(int feature);
+
     cb::Event::Base &getEventBase() {return base;}
     cb::Event::DNSBase &getEventDNS() {return dns;}
     cb::Event::Client &getEventClient() {return client;}
@@ -96,6 +97,3 @@ namespace duerer {
     void childSignal(cb::Event::Event &e, int signal, unsigned flags);
   };
 }
-
-#endif // DUERER_APP_H
-

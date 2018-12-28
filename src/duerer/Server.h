@@ -29,8 +29,7 @@
 
 \******************************************************************************/
 
-#ifndef DUERER_SERVER_H
-#define DUERER_SERVER_H
+#pragma once
 
 #include <cbang/event/WebServer.h>
 
@@ -52,6 +51,3 @@ namespace duerer {
     cb::Event::Request *createRequest(evhttp_request *req);
   };
 }
-
-#endif // DUERER_SERVER_H
-

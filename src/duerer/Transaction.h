@@ -29,8 +29,7 @@
 
 \******************************************************************************/
 
-#ifndef DUERER_TRANSACTION_H
-#define DUERER_TRANSACTION_H
+#pragma once
 
 #include <cbang/event/Request.h>
 #include <cbang/event/PendingRequest.h>
@@ -67,5 +66,3 @@ namespace duerer {
     void storeImage(Request *req, int err);
   };
 }
-
-#endif // DUERER_TRANSACTION_H
