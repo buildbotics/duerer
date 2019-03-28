@@ -4,9 +4,9 @@ After=network.target
 
 [Service]
 User=duerer
-ExecStart=/usr/bin/duerer --config /etc/duerer/config.xml --log /var/log/duerer/duerer.log --log-rotate-dir /var/log/duerer
 WorkingDirectory=/var/run/duerer
-Restart=on-failure
+ExecStart=/usr/bin/duerer --config /etc/duerer/config.xml --log /var/log/duerer/duerer.log --log-rotate-dir /var/log/duerer
+Restart=always
 
 [Install]
 WantedBy=multi-user.target

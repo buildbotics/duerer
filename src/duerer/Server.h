@@ -46,7 +46,6 @@ namespace duerer {
 
     void init();
 
-
     // From cb::Event::HTTPHandler
     cb::Event::Request *createRequest(evhttp_request *req);
   };

@@ -32,7 +32,7 @@
 #include "App.h"
 #include "Transaction.h"
 
-#include <cbang/util/DefaultCatch.h>
+#include <cbang/Catch.h>
 
 #include <cbang/os/SystemUtilities.h>
 
@@ -141,9 +141,9 @@ int App::init(int argc, char *argv[]) {
   server.init();
 
   // Handle exit signal
-  base.newSignal(SIGINT, this, &App::interruptSignal).add();
-  base.newSignal(SIGTERM, this, &App::interruptSignal).add();
-  base.newSignal(SIGCHLD, this, &App::childSignal).add();
+  base.newSignal(SIGINT, this, &App::interruptSignal)->add();
+  base.newSignal(SIGTERM, this, &App::interruptSignal)->add();
+  base.newSignal(SIGCHLD, this, &App::childSignal)->add();
 
   // Make sure cache dir exists
   SystemUtilities::ensureDirectory(getCacheDir());

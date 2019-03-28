@@ -33,15 +33,15 @@
 #include "App.h"
 #include "Transaction.h"
 
+#include <cbang/openssl/SSLContext.h>
+
 using namespace cb;
 using namespace std;
 using namespace duerer;
 
 
 Server::Server(App &app) :
-  Event::WebServer(app.getOptions(), app.getEventBase()),
-  app(app) {
-}
+  Event::WebServer(app.getOptions(), app.getEventBase()), app(app) {}
 
 
 void Server::init() {

@@ -33,7 +33,7 @@
 #include "App.h"
 
 #include <cbang/log/Logger.h>
-#include <cbang/util/DefaultCatch.h>
+#include <cbang/Catch.h>
 #include <cbang/os/SystemUtilities.h>
 #include <cbang/os/Subprocess.h>
 
@@ -122,7 +122,7 @@ bool Transaction::processRequest() {
   size = String::toLower(args.getString("size", "orig"));
 
   // Validate size
-  if (size != "orig" && !app.hasCmd(size)) THROWS("Invalid size " << size);
+  if (size != "orig" && !app.hasCmd(size)) THROW("Invalid size " << size);
 
   // Check if file exists
   string path = base + "/" + size;
@@ -141,7 +141,7 @@ bool Transaction::processRequest() {
       URI::encode(getURI().getPath());
 
     pending = app.getEventClient()
-      .callMember(url, HTTP_GET, this, &Transaction::storeImage);
+      .call(url, HTTP_GET, this, &Transaction::storeImage);
     pending->send();
 
   } else convertImage();
