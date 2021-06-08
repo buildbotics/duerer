@@ -47,6 +47,8 @@ namespace duerer {
     void init();
 
     // From cb::Event::HTTPHandler
-    cb::Event::Request *createRequest(evhttp_request *req);
+    cb::SmartPointer<cb::Event::Request> createRequest
+    (cb::Event::RequestMethod method, const cb::URI &uri,
+     const cb::Version &version);
   };
 }

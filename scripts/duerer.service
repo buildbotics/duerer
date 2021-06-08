@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=duerer
-WorkingDirectory=/var/run/duerer
+WorkingDirectory=/var/lib/duerer
 ExecStart=/usr/bin/duerer --config /etc/duerer/config.xml --log /var/log/duerer/duerer.log --log-rotate-dir /var/log/duerer
 Restart=always
 

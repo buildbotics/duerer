@@ -46,14 +46,12 @@ using namespace cb;
 using namespace duerer;
 
 
-Transaction::Transaction(App &app, evhttp_request *req) :
-  Request(req), app(app), locked(false) {
-}
+Transaction::Transaction(App &app, Event::RequestMethod method, const URI &uri,
+                         const Version &version) :
+  Request(method, uri, version), app(app), locked(false) {}
 
 
-Transaction::~Transaction() {
-  unlock();
-}
+Transaction::~Transaction() {unlock();}
 
 
 string Transaction::getBase() const {
@@ -61,9 +59,7 @@ string Transaction::getBase() const {
 }
 
 
-string Transaction::getPath() const {
-  return getBase() + "/" + size;
-}
+string Transaction::getPath() const {return getBase() + "/" + size;}
 
 
 void Transaction::lock() {
@@ -72,9 +68,7 @@ void Transaction::lock() {
 }
 
 
-void Transaction::unlock() {
-  if (locked) app.unlock(getBase());
-}
+void Transaction::unlock() {if (locked) app.unlock(getBase());}
 
 
 void Transaction::sendFile(const string &path) {
@@ -85,9 +79,7 @@ void Transaction::sendFile(const string &path) {
 }
 
 
-void Transaction::sendFile() {
-  sendFile(getPath());
-}
+void Transaction::sendFile() {sendFile(getPath());}
 
 
 void Transaction::convertImage() {
@@ -118,7 +110,7 @@ bool Transaction::processRequest() {
   if (app.wait(base, this)) return true;
 
   // Get type
-  JSON::Dict &args = parseQueryArgs();
+  auto &args = *parseQueryArgs();
   size = String::toLower(args.getString("size", "orig"));
 
   // Validate size
@@ -150,15 +142,15 @@ bool Transaction::processRequest() {
 }
 
 
-void Transaction::storeImage(Request *req, int err) {
-  if (!req || err) return;
+void Transaction::storeImage(Request &req) {
+  if (!req.isOk()) return;
 
-  if (req->getResponseCode() != HTTP_OK) {
-    reply(req->getResponseCode());
+  if (req.getResponseCode() != HTTP_OK) {
+    reply(req.getResponseCode());
     return;
   }
 
-  Event::Buffer buf = req->getInputBuffer();
+  Event::Buffer buf = req.getInputBuffer();
 
   // Ensure the cache directory exists
   string path = getBase();

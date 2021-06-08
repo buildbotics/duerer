@@ -4,13 +4,16 @@ NAME=duerer
 ETC=/etc/$NAME
 RUN=/var/run/$NAME
 LOG=/var/log/$NAME
+LIB=/var/lib/$NAME
 
 case "$1" in
     reconfigure|configure)
+        mkdir -p $LIB
+
         # Setup permissions
-        chown root:$NAME $ETC
-        chown $NAME:$NAME $RUN $LOG
-        chmod 775 $ETC $RUN $LOG
+        chown root:$NAME $ETC 
+        chown $NAME:$NAME $RUN $LOG $LIB
+        chmod 775 $ETC $RUN $LOG $LIB
 
         # Start the service
         ln -sf /usr/share/$NAME/$NAME.service /etc/systemd/system/

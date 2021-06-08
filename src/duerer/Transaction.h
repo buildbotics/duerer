@@ -32,7 +32,7 @@
 #pragma once
 
 #include <cbang/event/Request.h>
-#include <cbang/event/PendingRequest.h>
+#include <cbang/event/OutgoingRequest.h>
 
 
 namespace duerer {
@@ -42,11 +42,12 @@ namespace duerer {
     App &app;
 
     std::string size;
-    cb::SmartPointer<cb::Event::PendingRequest> pending;
+    cb::SmartPointer<cb::Event::OutgoingRequest> pending;
     bool locked;
 
   public:
-    Transaction(App &app, evhttp_request *req);
+    Transaction(App &app, cb::Event::RequestMethod method, const cb::URI &uri,
+                const cb::Version &version);
     ~Transaction();
 
     std::string getBase() const;
@@ -63,6 +64,6 @@ namespace duerer {
     bool processRequest();
 
     // Client callback
-    void storeImage(Request *req, int err);
+    void storeImage(Request &req);
   };
 }

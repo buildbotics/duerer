@@ -52,6 +52,7 @@ void Server::init() {
 }
 
 
-Event::Request *Server::createRequest(evhttp_request *req) {
-  return new Transaction(app, req);
+SmartPointer<Event::Request> Server::createRequest
+(Event::RequestMethod method, const URI &uri, const Version &version) {
+  return new Transaction(app, method, uri, version);
 }

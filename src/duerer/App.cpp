@@ -49,8 +49,9 @@ using namespace std;
 
 
 App::App() :
-  cb::Application("Duerer", App::_hasFeature), dns(base), client(base, dns),
-  server(*this), cacheDir("cache"), awsBucket("buildbotics") {
+  cb::Application("Duerer", App::_hasFeature), base(true), dns(base),
+  client(base, dns), server(*this), cacheDir("cache"),
+  awsBucket("buildbotics") {
 
   options.pushCategory("Duerer Server");
   options.addTarget("cache", cacheDir,
