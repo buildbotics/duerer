@@ -110,7 +110,7 @@ bool Transaction::processRequest() {
   if (app.wait(base, this)) return true;
 
   // Get type
-  auto &args = *parseQueryArgs();
+  auto &args = *parseArgs();
   size = String::toLower(args.getString("size", "orig"));
 
   // Validate size

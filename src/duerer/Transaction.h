@@ -32,7 +32,7 @@
 #pragma once
 
 #include <cbang/event/Request.h>
-#include <cbang/event/OutgoingRequest.h>
+#include <cbang/event/Client.h>
 
 
 namespace duerer {
@@ -42,7 +42,7 @@ namespace duerer {
     App &app;
 
     std::string size;
-    cb::SmartPointer<cb::Event::OutgoingRequest> pending;
+    cb::Event::Client::RequestPtr pending;
     bool locked;
 
   public:
