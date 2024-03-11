@@ -35,8 +35,8 @@
 
 #include <cbang/Application.h>
 
+#include <cbang/dns/Base.h>
 #include <cbang/event/Base.h>
-#include <cbang/event/DNSBase.h>
 #include <cbang/event/Client.h>
 
 #include <map>
@@ -53,7 +53,7 @@ namespace duerer {
 
   class App : public cb::Application {
     cb::Event::Base base;
-    cb::Event::DNSBase dns;
+    cb::DNS::Base dns;
     cb::Event::Client client;
 
     Server server;
@@ -72,7 +72,7 @@ namespace duerer {
     static bool _hasFeature(int feature);
 
     cb::Event::Base &getEventBase() {return base;}
-    cb::Event::DNSBase &getEventDNS() {return dns;}
+    cb::DNS::Base &getEventDNS() {return dns;}
     cb::Event::Client &getEventClient() {return client;}
 
     const std::string &getCacheDir() const {return cacheDir;}
